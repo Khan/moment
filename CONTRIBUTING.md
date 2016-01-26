@@ -1,45 +1,74 @@
-All pull requests to the `master` branch will be closed.
-========================================================
-
-Please submit all pull requests to the `develop` branch.
-
-Language translations will not be merged without unit tests.
-============================================================
-
-See [the english unit tests](https://github.com/timrwood/moment/blob/develop/test/lang/en.js) for an example.
-
 Submitting Issues
 =================
 
 If you are submitting a bug, please create a [jsfiddle](http://jsfiddle.net/) demonstrating the issue.
 
-Contributing
-============
+Read before submitting Pull Requests
+====================================
 
-To contribute, fork the library and install grunt.
+ * **Pull requests to the `master` branch will be closed.** Please submit all pull requests to the `develop` branch.
+ * **Locale translations will not be merged without unit tests.** See [the British English unit tests](https://github.com/moment/moment/blob/develop/src/test/locale/en-gb.js) for an example.
+ * **Do not include the minified files in your pull request.** These are
+   `moment.js`, `locale/*.js`, `min/*.js`. Don't worry, we'll build them when
+   we cut a release.
 
-    npm install grunt -g
+Code organization
+=================
 
-You can add tests to the files in `/test/moment` or add a new test file if you are adding a new feature.
+Starting from version 2.10.0 the code is placed under `src/`.
+`moment.js`, `locale/*.js`, `min/*.js` are generated only on release.
 
-To run the tests, do `grunt test` to run all tests.
+**DO NOT** submit changes to the generated files. Instead only change
+`src/**/*.js` and run the tests.
 
-To check the filesize, you can use `grunt size`.
+* `src/lib/**/*.js` moment core files
+* `src/locale/*.js` locale files
+* `src/test/moment/*.js` moment core tests
+* `src/test/locale/*.js` locale tests
 
-To minify all the files, use `grunt release`.
+We're using ES6 module system, but nothing else ES6, because of performance
+considerations (added code by the transpiler, less than optimal translation to
+ES5). So please do not use that fancy new ES6 feature in your patch, it won't
+be accepted.
 
-If your code passes the unit tests (including the ones you wrote), submit a pull request.
+Setting up development environment
+==================================
 
-Submitting pull requests
-========================
+To contribute, fork the library and install grunt and dependencies. You need
+[git](http://git-scm.com/) and
+[node](http://nodejs.org/); you might use
+[nvm](https://github.com/creationix/nvm) or
+[nenv](https://github.com/ryuone/nenv) to install node.
 
-Moment.js now uses [git-flow](https://github.com/nvie/gitflow). If you're not familiar with git-flow, please read up on it, you'll be glad you did.
+```bash
+git clone https://github.com/moment/moment.git
+cd moment
+npm install -g grunt-cli
+npm install
+git checkout develop  # all patches against develop branch, please!
+grunt                 # this runs tests and jshint
+```
 
-When submitting new features, please create a new feature branch using `git flow feature start <name>` and submit the pull request to the `develop` branch.
+Changing locale files
+=====================
 
-Pull requests for enhancements for features should be submitted to the `develop` branch as well.
+If you have any changes to existing locale files, `@mention` the original
+author in the pull request (check the top of the language file), and ask if
+he/she approves of your changes. Because I don't know any languages I can't
+judge your locale changes, only the original author can :)
 
-When submitting a bugfix, please check if there is an existing bugfix branch. If the latest stable version is `1.5.0`, the bugfix branch would be `hotfix/1.5.1`. All pull requests for bug fixes should be on a `hotfix` branch, unless the bug fix depends on a new feature.
+In order for your pull request to get merged it must have approval of original
+author, or at least one other native speaker has to approve of the change
+(happens rarely).
 
-The `master` branch should always have the latest stable version. When bugfix or minor releases are needed, the develop/hotfix branch will be merged into master and released.
+Grunt tasks
+===========
 
+We use Grunt for managing the build. Here are some useful Grunt tasks:
+
+  * `grunt` The default task lints the code and runs the tests. You should make sure you do this before submitting a PR.
+  * `grunt test` run the tests.
+  * `grunt release` Build everything, including minified files (do not include
+    those in Pull Requests)
+  * `grunt transpile:fr,ru` Build custom locale bundles `moment-with-locales.custom.js` and `locales.custom.js` inside `build/umd/min` containing just French and Russian.
+  * `grunt size` Print size statistics.

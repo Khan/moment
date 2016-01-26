@@ -5,9 +5,13 @@
 //! momentjs.com
 
 ;(function (global, factory) {
+    // NOTE(jeresig): We hack moment.js to always expose `moment` as a global
+    // as the global is used by the `khan-exercises` framework
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
     global.moment = factory()
+    typeof define === 'function' && define.amd ? define(factory) : null;
+    global.moment = factory();
 }(this, function () { 'use strict';
 
     var hookCallback;

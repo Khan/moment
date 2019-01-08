@@ -278,7 +278,7 @@
                 module && module.exports) {
             try {
                 oldLocale = globalLocale._abbr;
-                require('./locale/' + name);
+                require('./locale/' + name + '.js');
                 // because defineLocale currently also sets the global locale, we
                 // want to undo that for lazy loaded locales
                 locale_locales__getSetGlobalLocale(oldLocale);
